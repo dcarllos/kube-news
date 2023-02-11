@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  kube-news:
+    build: .
+    ports:
+      - 8080:8080
+    networks:
+      - kubenews_net
+    environment:
+      DB_DATABASE: kubedevnews
+      DB_USERNAME: kubedevnews
+      DB_PASSWORD: Pg#123
+      DB_HOST: postgres
+  postgres:
+    image: postgres:15.1
+    ports:
+      - 5432:5432
+    networks:
+      - kubenews_net
+    volumes:
+      - kubenews_vol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kubedevnews
+      POSTGRES_USER: kubedevnews
+      POSTGRES_PASSWORD: Pg#123
+  
+  pgadmin:
+    image: dpage/pgadmin4:6.19
+    ports:
+      - 8081:80
+    networks:
+      - kubenews_net
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com   
+      PGADMIN_DEFAULT_PASSWORD: pgadminpwd
+
+networks:
+  kubenews_net:
+    driver: bridge
+volumes:
+  kubenews_vol:
